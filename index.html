@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiragana Flashcards - Phần 2 (Các hàng còn lại)</title>
+    <style>
+        :root {
+            --primary-color: #0984e3;
+            --secondary-color: #a29bfe;
+            --bg-color: #f5f6fa;
+            --card-bg: #ffffff;
+            --text-color: #2d3436;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .card-container {
+            width: 350px;
+            height: 450px;
+            perspective: 1000px;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 20px;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: var(--card-bg);
+            border: 2px solid #e1e1e1;
+        }
+
+        .card-front {
+            color: var(--primary-color);
+        }
+
+        .card-front .kana {
+            font-size: 120px;
+            font-weight: bold;
+        }
+
+        .card-back {
+            background-color: var(--primary-color);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .card-back .romaji {
+            font-size: 80px;
+            font-weight: bold;
+            text-transform: lowercase;
+        }
+
+        .hint {
+            font-size: 14px;
+            color: #b2bec3;
+            position: absolute;
+            bottom: 20px;
+        }
+
+        .card-back .hint {
+            color: #ffeaa7;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .btn-prev, .btn-next {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-random {
+            background-color: #6c5ce7;
+            color: white;
+        }
+
+        .progress {
+            font-size: 16px;
+            font-weight: 500;
+            color: #636e72;
+        }
+
+        .progress-bar-container {
+            width: 350px;
+            height: 8px;
+            background-color: #dfe6e9;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .grid-title {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            color: #2d3436;
+        }
+
+        .hiragana-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .grid-item {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #e1e1e1;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-color);
+        }
+
+        .grid-item .g-kana {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .grid-item .g-romaji {
+            font-size: 12px;
+            color: #b2bec3;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 400px) {
+            .card-container, .progress-bar-container {
+                width: 100%;
+                max-width: 320px;
+            }
+            .hiragana-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Hiragana (Các hàng còn lại)</h1>
+        <p>Bấm vào thẻ để lật xem cách đọc (Romaji)</p>
+    </header>
+
+    <div class="card-container" onclick="flipCard()">
+        <div class="flashcard" id="card">
+            <div class="card-face card-front">
+                <div class="kana" id="kana-front">は</div>
+                <div class="hint">Nhấn để xem cách đọc</div>
+            </div>
+            <div class="card-face card-back">
+                <div class="romaji" id="romaji-back">ha</div>
+                <div class="hint">Nhấn để quay lại chữ gốc</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-prev" onclick="prevCard(event)">Trước</button>
+        <span class="progress" id="progress-text">1 / 21</span>
+        <button class="btn-next" onclick="nextCard(event)">Tiếp</button>
+        <button class="btn-random" onclick="randomCard(event)">Trộn chữ</button>
+    </div>
+
+    <hr style="width: 100%; max-width: 500px; margin: 30px 0; border: 0; border-top: 1px solid #dfe6e9;">
+
+    <h2 class="grid-title">Bảng tổng hợp phần 2</h2>
+    <div class="hiragana-grid" id="grid-container"></div>
+
+    <script>
+        // Các hàng còn lại bao gồm H, M, Y, R, W, N (Có lọc ô trống để hiển thị dạng lưới đẹp mắt)
+        const gridData = [
+            { kana: 'は', romaji: 'ha' }, { kana: 'ひ', romaji: 'hi' }, { kana: 'ふ', romaji: 'fu' }, { kana: 'へ', romaji: 'he' }, { kana: 'ほ', romaji: 'ho' },
+            { kana: 'ま', romaji: 'ma' }, { kana: 'み', romaji: 'mi' }, { kana: 'む', romaji: 'mu' }, { kana: 'め', romaji: 'me' }, { kana: 'も', romaji: 'mo' },
+            { kana: 'や', romaji: 'ya' }, { kana: '', romaji: '' }, { kana: 'ゆ', romaji: 'yu' }, { kana: '', romaji: '' }, { kana: 'よ', romaji: 'yo' },
+            { kana: 'ら', romaji: 'ra' }, { kana: 'り', romaji: 'ri' }, { kana: 'る', romaji: 'ru' }, { kana: 'れ', romaji: 're' }, { kana: 'ろ', romaji: 'ro' },
+            { kana: 'わ', romaji: 'wa' }, { kana: '', romaji: '' }, { kana: '', romaji: '' }, { kana: '', romaji: '' }, { kana: 'を', romaji: 'wo' },
+            { kana: 'ん', romaji: 'n' }
+        ];
+
+        // Lọc danh sách chữ thực tế để làm Flashcard
+        const flashcardList = gridData.filter(item => item.kana !== '');
+
+        let currentIndex = 0;
+
+        const cardEl = document.getElementById('card');
+        const kanaFrontEl = document.getElementById('kana-front');
+        const romajiBackEl = document.getElementById('romaji-back');
+        const progressTextEl = document.getElementById('progress-text');
+        const progressBarEl = document.getElementById('progress-bar');
+        const gridEl = document.getElementById('grid-container');
+
+        function updateCard() {
+            cardEl.classList.remove('flipped');
+            setTimeout(() => {
+                const current = flashcardList[currentIndex];
+                kanaFrontEl.textContent = current.kana;
+                romajiBackEl.textContent = current.romaji;
+                
+                progressTextEl.textContent = `${currentIndex + 1} / ${flashcardList.length}`;
+                const progressPercent = ((currentIndex + 1) / flashcardList.length) * 100;
+                progressBarEl.style.width = `${progressPercent}%`;
+            }, 150);
+        }
+
+        function flipCard() {
+            cardEl.classList.toggle('flipped');
+        }
+
+        function nextCard(event) {
+            event.stopPropagation();
+            currentIndex = (currentIndex + 1) % flashcardList.length;
+            updateCard();
+        }
+
+        function prevCard(event) {
+            event.stopPropagation();
+            currentIndex = (currentIndex - 1 + flashcardList.length) % flashcardList.length;
+            updateCard();
+        }
+
+        function randomCard(event) {
+            event.stopPropagation();
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * flashcardList.length);
+            } while (randomIndex === currentIndex);
+            currentIndex = randomIndex;
+            updateCard();
+        }
+
+        function generateGrid() {
+            gridData.forEach((item) => {
+                const gridItem = document.createElement('div');
+                if(item.kana === '') {
+                    gridItem.style.visibility = 'hidden';
+                } else {
+                    gridItem.className = 'grid-item';
+                    gridItem.innerHTML = `
+                        <div class="g-kana">${item.kana}</div>
+                        <div class="g-romaji">${item.romaji}</div>
+                    `;
+                    gridItem.onclick = () => {
+                        currentIndex = flashcardList.findIndex(f => f.kana === item.kana);
+                        updateCard();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    };
+                }
+                gridEl.appendChild(gridItem);
+            });
+        }
+
+        generateGrid();
+        updateCard();
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextCard(event || window.event);
+            else if (e.key === 'ArrowLeft') prevCard(event || window.event);
+            else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flipCard(); }
+        });
+    </script>
+</body>
+</html>
